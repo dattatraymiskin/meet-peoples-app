@@ -19,6 +19,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex, WebRequest request) {
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
     }
+    
+    
+    @ExceptionHandler(PostNotFoundException.class)
+    public ResponseEntity<?> handlePostNotFoundException(PostNotFoundException ex, WebRequest request) {
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
 
     // Add more specific exception handlers as needed
 }

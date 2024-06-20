@@ -21,4 +21,5 @@ public interface UserService {
 	
 	public void deleteUser(Long userId);
 	
+	public List<UserDTO> getUsers();
 }
