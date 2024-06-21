@@ -1,11 +1,15 @@
 package com.meetpeoples.dto;
 
+import java.time.LocalDateTime;
+
 import lombok.Data;
 
 @Data
 public class PostDTO {
     private Long id;
-    private Long userId;
-    private String content;
-    private String createdAt;
+    private String caption;
+    private String image;
+    private String video;
+    private LocalDateTime createdAt;
+    private UserDTO user;
 }	

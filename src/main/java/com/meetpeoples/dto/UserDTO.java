@@ -2,8 +2,6 @@ package com.meetpeoples.dto;
 
 import java.util.List;
 
-import com.meetpeoples.models.Post;
-
 import lombok.Data;
 
 @Data
@@ -14,5 +12,5 @@ public class UserDTO {
     private String lastName;
     private String email;
     private String gender;
-    private List<Post> posts;
+    private List<PostDTO> posts;
 }	
