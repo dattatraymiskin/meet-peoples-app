@@ -28,8 +28,7 @@ public class UserServiceImpl implements UserService{
 		if (optionalUser.isPresent()) {
 			User user = optionalUser.get();
 			modelMapper.map(userDTO, user);
-			user.setUsername(userDTO.getUsername());
-			user.setEmail(userDTO.getEmail());
+			user.setId(userId);
 			user = userRepository.save(user);
 			return modelMapper.map(user, UserDTO.class);
 		} else {

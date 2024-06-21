@@ -1,9 +1,11 @@
 package com.meetpeoples.models;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -62,7 +64,7 @@ public class User {
 	    )
 	    private Set<User> followings = new HashSet<>();
 
-	    @OneToMany(mappedBy = "user")
-	    private List<Post> posts;
+	    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+	    private List<Post> posts= new ArrayList<>();
 	
 }
