@@ -20,7 +20,7 @@ import com.meetpeoples.response.ApiResponse;
 import com.meetpeoples.service.PostService;
 
 @RestController
-@RequestMapping("/posts")
+@RequestMapping("/v1/posts")
 public class PostController {
 
 	@Autowired
