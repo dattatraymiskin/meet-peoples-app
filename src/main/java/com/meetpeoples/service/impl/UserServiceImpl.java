@@ -71,9 +71,11 @@ public class UserServiceImpl implements UserService {
 		Optional<User> user = userRepository.findByEmail(email);
 		if (user.isPresent()) {
 			return conversionUtility.convertToUserDtoWithoutPost(user.get());
-		} else {
-			throw new UserNotFoundException("User not found with email " + email);
-		}
+		} /*
+			 * else { throw new UserNotFoundException("User not found with email " + email);
+			 * }
+			 */
+		return null;
 	}
 
 	@Override

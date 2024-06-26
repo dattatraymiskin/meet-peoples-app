@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ApiResponse {
 	
-	
 	private String message;
 	
 	private boolean status;
