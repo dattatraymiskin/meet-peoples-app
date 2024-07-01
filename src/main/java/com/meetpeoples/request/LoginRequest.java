@@ -1,4 +1,4 @@
-package com.meetpeoples.response;
+package com.meetpeoples.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ApiResponse {
-	
-	private String message;
-	
-	private boolean status;
+public class LoginRequest {
 
+	private String email;
+	private String password;
 }

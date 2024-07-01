@@ -55,8 +55,8 @@ public class UserController {
 	}
 
 	@PostMapping("/{id}/follow/{followerId}")
-	public ResponseEntity<Void> followUser(@PathVariable Long id, @PathVariable Long followerId) {
-		userService.followUser(id, followerId);
-		return ResponseEntity.ok().build();
+	public ResponseEntity<UserDTO> followUser(@PathVariable Long id, @PathVariable Long followerId) {
+		UserDTO followUser = userService.followUser(id, followerId);
+		return ResponseEntity.ok(followUser);
 	}
 }
