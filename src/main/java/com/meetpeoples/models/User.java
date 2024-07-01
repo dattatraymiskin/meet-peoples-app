@@ -1,16 +1,13 @@
 package com.meetpeoples.models;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.Set;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -51,21 +48,23 @@ public class User {
 	    @Column(nullable = false)
 	    private String gender;
 	    
-	    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	    @JoinTable(name = "followers",
-	            joinColumns = @JoinColumn(name = "follower_id"),
-	            inverseJoinColumns = @JoinColumn(name = "following_id"))
-	    @JsonIgnore
-	    private List<User> followings;
+	    @ManyToMany
+	    @JoinTable(
+	        name = "user_followers",
+	        joinColumns = @JoinColumn(name = "user_id"),
+	        inverseJoinColumns = @JoinColumn(name = "follower_id")
+	    )
+	    private Set<User> followers = new HashSet<>();
 
-	    @ManyToMany(mappedBy = "followings", cascade = { CascadeType.PERSIST, CascadeType.MERGE })
-	    @JsonIgnore
-	    private List<User> followers;
+	    @ManyToMany
+	    @JoinTable(
+	        name = "user_followings",
+	        joinColumns = @JoinColumn(name = "user_id"),
+	        inverseJoinColumns = @JoinColumn(name = "following_id")
+	    )
+	    private Set<User> followings = new HashSet<>();
 
-		@OneToMany( mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-		@JsonIgnore
-//		@JsonIgnoreProperties("user")
-//		@JsonManagedReference
+	    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
 	    private List<Post> posts= new ArrayList<>();
 	
 }

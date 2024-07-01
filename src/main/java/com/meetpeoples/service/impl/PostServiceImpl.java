@@ -10,8 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meetpeoples.dto.PostDTO;
-import com.meetpeoples.dto.UserDTO;
-import com.meetpeoples.exception.ErrorResponseException;
 import com.meetpeoples.exception.PostNotFoundException;
 import com.meetpeoples.exception.UserNotFoundException;
 import com.meetpeoples.models.Post;
@@ -19,7 +17,6 @@ import com.meetpeoples.models.User;
 import com.meetpeoples.repository.PostRepository;
 import com.meetpeoples.repository.UserRepository;
 import com.meetpeoples.service.PostService;
-import com.meetpeoples.utility.ConversionUtility;
 
 @Service
 public class PostServiceImpl implements PostService {
@@ -32,8 +29,6 @@ public class PostServiceImpl implements PostService {
     
     @Autowired
     private ModelMapper modelMapper;
-    @Autowired
-    private ConversionUtility conversionUtility;
 
 	@Override
 	public PostDTO createNewPost(Post post, Long userId) {
@@ -42,7 +37,7 @@ public class PostServiceImpl implements PostService {
             User user = userOptional.get();
             post.setUser(user);
             Post savedPost = postRepository.save(post);
-            return conversionUtility.convertToDto(savedPost);
+            return modelMapper.map(savedPost, PostDTO.class);
         } else {
             throw new UserNotFoundException("User not found with id " + userId);
         }
@@ -77,29 +72,19 @@ public class PostServiceImpl implements PostService {
     public PostDTO findPostById(Long postId) {
     	 Optional<Post> postOptional = postRepository.findById(postId);
          if (postOptional.isPresent()) {
-             return conversionUtility.convertToDto(postOptional.get());
+             return modelMapper.map(postOptional.get(), PostDTO.class);
          } else {
              throw new PostNotFoundException("Post not found with id " + postId);
          }
     }
 
-	@Override
-	public List<PostDTO> findAllPost() {
-		List<PostDTO> postDto = new ArrayList<>();
-		try {
-		List<Post> posts = postRepository.findAll();
-		for (Post post2 : posts) {
-			PostDTO convertToDto = conversionUtility.convertToDto(post2);
-			if(convertToDto!=null ) {				
-				convertToDto.setUser(conversionUtility.convertToUserDtoWithoutPost(post2.getUser()));
-			}
-			postDto.add(convertToDto);
-		}
-		} catch (Exception e) {
-		     throw new ErrorResponseException("unable to find all post");
-		}
-		return postDto;/*posts.stream().map(post -> modelMapper.map(post, PostDTO.class)).collect(Collectors.toList());*/
-	}
+    @Override
+    public List<PostDTO> findAllPost() {
+    	 List<Post> posts = postRepository.findAll();
+         return posts.stream()
+                     .map(post -> modelMapper.map(post, PostDTO.class))
+                     .collect(Collectors.toList());
+    }
 
     @Override
     public PostDTO savedPost(Long postId, Long userId) {
@@ -115,7 +100,7 @@ public class PostServiceImpl implements PostService {
             	
             posts.add(post);
             userRepository.save(user);
-            return conversionUtility.convertToDto(post);
+            return modelMapper.map(post, PostDTO.class);
         } else {
             throw new PostNotFoundException("Post not found with id " + postId);
         }
