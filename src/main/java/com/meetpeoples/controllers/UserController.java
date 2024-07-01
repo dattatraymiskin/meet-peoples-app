@@ -10,12 +10,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.meetpeoples.dto.UserDTO;
 import com.meetpeoples.models.User;
 import com.meetpeoples.service.UserService;
+import com.meetpeoples.utility.ConversionUtility;
 
 @RestController
 @RequestMapping("/v1/users")
@@ -23,6 +25,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+	
+	@Autowired
+	private ConversionUtility conversionUtility;
 
 	@PostMapping
 	public ResponseEntity<UserDTO> createUser(@RequestBody User user) {
@@ -35,16 +40,25 @@ public class UserController {
 		List<UserDTO> users = userService.getUsers();
 		return ResponseEntity.ok(users);
 	}
+	
+	@GetMapping("/profile")
+	public ResponseEntity<User> getUserProfile(@RequestHeader("Authorization") String token) {
+		 User userFromJwt = userService.getUserFromJwt(token);
+		 userFromJwt.setPassword(null);
+		return ResponseEntity.ok(userFromJwt);
+	}
 
 	@GetMapping("/{userId}")
 	public ResponseEntity<UserDTO> getUserById(@PathVariable(value = "userId") Long userId) {
-		UserDTO findUserById = userService.findUserById(userId);
-		return ResponseEntity.ok(findUserById);
+		 User userById = userService.findUserById(userId);
+		 UserDTO convertToDto = conversionUtility.convertToDto(userById);
+		return ResponseEntity.ok(convertToDto);
 	}
 
-	@PutMapping("/{id}")
-	public ResponseEntity<UserDTO> updateUser(@PathVariable Long id, @RequestBody UserDTO userDTO) {
-		UserDTO updatedUser = userService.updateUser(id, userDTO);
+	@PutMapping("")
+	public ResponseEntity<UserDTO> updateUser(@RequestHeader("Authorization") String token, @RequestBody UserDTO userDTO) {
+		User userFromJwt = userService.getUserFromJwt(token);
+		UserDTO updatedUser = userService.updateUser(userFromJwt.getId(), userDTO);
 		return ResponseEntity.ok(updatedUser);
 	}
 
@@ -54,9 +68,10 @@ public class UserController {
 		return ResponseEntity.noContent().build();
 	}
 
-	@PostMapping("/{id}/follow/{followerId}")
-	public ResponseEntity<UserDTO> followUser(@PathVariable Long id, @PathVariable Long followerId) {
-		UserDTO followUser = userService.followUser(id, followerId);
+	@PostMapping("/follow/{followerId}")
+	public ResponseEntity<UserDTO> followUser(@RequestHeader("Authorization") String token, @PathVariable Long followerId) {
+		User userFromJwt = userService.getUserFromJwt(token);
+		UserDTO followUser = userService.followUser(userFromJwt.getId(), followerId);
 		return ResponseEntity.ok(followUser);
 	}
 }

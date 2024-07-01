@@ -13,7 +13,7 @@ public interface PostService {
 	
 	List<PostDTO> findPostByUserId(Long userId);
 	
-	PostDTO findPostById(Long postId);
+	Post findPostById(Long postId);
 	
 	List<PostDTO> findAllPost();
 	

@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,8 +51,8 @@ public class User {
 	    
 	    @ManyToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	    @JoinTable(name = "followers",
-	            joinColumns = @JoinColumn(name = "follower_id"),
-	            inverseJoinColumns = @JoinColumn(name = "following_id"))
+	            joinColumns = @JoinColumn(name = "followers_id"),
+	            inverseJoinColumns = @JoinColumn(name = "followings_id"))
 	    @JsonIgnore
 	    private List<User> followings;
 
@@ -64,8 +62,6 @@ public class User {
 
 		@OneToMany( mappedBy = "user",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 		@JsonIgnore
-//		@JsonIgnoreProperties("user")
-//		@JsonManagedReference
 	    private List<Post> posts= new ArrayList<>();
 	
 }
