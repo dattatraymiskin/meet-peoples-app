@@ -19,6 +19,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import lombok.Data;
 
 @Entity
@@ -56,5 +57,7 @@ public class Post  implements Serializable{
 	@JsonIgnore
 	private List<User> liked = new ArrayList<>();
 
-
+    @OneToMany
+    @JsonIgnore
+	private List<Comment> comments = new ArrayList<>();
 }

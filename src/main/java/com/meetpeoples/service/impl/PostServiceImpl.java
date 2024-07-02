@@ -3,14 +3,11 @@ package com.meetpeoples.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.meetpeoples.dto.PostDTO;
-import com.meetpeoples.dto.UserDTO;
 import com.meetpeoples.exception.ErrorResponseException;
 import com.meetpeoples.exception.PostNotFoundException;
 import com.meetpeoples.exception.UserNotFoundException;
@@ -30,8 +27,6 @@ public class PostServiceImpl implements PostService {
     @Autowired
     private UserRepository userRepository;
     
-    @Autowired
-    private ModelMapper modelMapper;
     @Autowired
     private ConversionUtility conversionUtility;
 
@@ -68,16 +63,18 @@ public class PostServiceImpl implements PostService {
     @Override
     public List<PostDTO> findPostByUserId(Long userId) {
         List<Post> posts = postRepository.findByUserId(userId);
-        return posts.stream()
-                    .map(post -> modelMapper.map(post, PostDTO.class))
-                    .collect(Collectors.toList());
+        List<PostDTO> list = new ArrayList<>();
+        for (Post post : posts) {
+			list.add(conversionUtility.convertToDto(post));
+		}
+        return list;
     }
 
     @Override
-    public PostDTO findPostById(Long postId) {
+    public Post findPostById(Long postId) {
     	 Optional<Post> postOptional = postRepository.findById(postId);
          if (postOptional.isPresent()) {
-             return conversionUtility.convertToDto(postOptional.get());
+             return postOptional.get();
          } else {
              throw new PostNotFoundException("Post not found with id " + postId);
          }
@@ -132,7 +129,7 @@ public class PostServiceImpl implements PostService {
                   .orElseThrow(() -> new UserNotFoundException("User not found with id " + userId));
             post.getLiked().add(user);
             Post save = postRepository.save(post);
-            return modelMapper.map(save, PostDTO.class); 
+            return conversionUtility.convertToDto(save); 
          } else {
              throw new PostNotFoundException("Post not found with id " + postId);
          }
