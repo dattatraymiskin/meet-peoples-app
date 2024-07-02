@@ -20,7 +20,7 @@ import com.meetpeoples.service.StoryService;
 import com.meetpeoples.service.UserService;
 
 @RestController
-@RequestMapping("v1/story")
+@RequestMapping("/v1/story")
 public class StoryController {
 
 	

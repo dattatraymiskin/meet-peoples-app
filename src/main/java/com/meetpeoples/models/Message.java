@@ -29,6 +29,7 @@ public class Message {
 	private String image;
 	
 	@ManyToOne
+	@JsonIgnore
 	private User user;
 	
 	@ManyToOne

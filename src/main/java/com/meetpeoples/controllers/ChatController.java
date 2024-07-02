@@ -19,7 +19,7 @@ import com.meetpeoples.service.ChatService;
 import com.meetpeoples.service.UserService;
 
 @RestController
-@RequestMapping("v1/chats")
+@RequestMapping("/v1/chats")
 public class ChatController {
 
 	@Autowired
